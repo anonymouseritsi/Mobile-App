@@ -1,89 +1,153 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, Button, Alert } from 'react-native';
+import React, { useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
+const SERVER_URL = "https://alcantara-classmanagerserver.vercel.app/users";
 export default function HomeScreen() {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
+  const [lastName, setLastName] = useState(``);
+  const [firstName, setFirstName] = useState(``);
+  const [section, setSection] = useState(``);
+  const [status, setStatus] = useState(``);
+  const [message, setMessage] = useState(``);
 
-  const handleSubmit = () => {
-  if (!firstName || !lastName || !email) {
-    alert('Please fill out all fields.');
-    return;
-  }
-  setFirstName('');
-  setLastName('');
-  setEmail('');
-  alert(`Submmited!`);
-};
+  const handlePresent = async () => {
+    setMessage("Present");
 
-const handleClear = () => {
-  setFirstName('');
-  setLastName('');
-  setEmail('');
-  alert('All fields cleared!');
-};
+    try {
+      const response = await fetch(SERVER_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          lastName: lastName,
+          firstName: firstName,
+          section: section,
+          status: "Present",
+        }),
+      });
 
-const handleGreet = () => {
-  alert(`Hi ${firstName || 'Guest'}! 👋`);
-};
+      if (!response.ok) {
+        throw new Error("Server Not Responding");
+      }
+
+      const result = await response.json();
+      setMessage("Attendance Submitted");
+      setLastName(""), setFirstName("");
+      setSection("");
+    } catch (error) {
+      console.error(error);
+      setMessage(`Server Error or Connection Failed`);
+    }
+  };
+
+  const handleAbsent = async () => {
+    setMessage("Absent");
+
+    try {
+      const response = await fetch(SERVER_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          lastName: lastName,
+          firstName: firstName,
+          section: section,
+          status: "Absent",
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Server Not Responding");
+      }
+
+      const result = await response.json();
+      setMessage("Attendance Submitted");
+      setLastName(""), setFirstName("");
+      setSection("");
+    } catch (error) {
+      console.error(error);
+      setMessage(`Server Error or Connection Failed`);
+    }
+  };
 
   return (
-    <View> 
-      <Text>First Name:
-      <TextInput
-        placeholder=" Enter first name "
-        value={firstName}
-        onChangeText={setFirstName}
-      />
+    <View style={styles.container}>
+      <Text style={styles.label}>
+        Last Name:
+        <TextInput
+          style={styles.input}
+          placeholder=" Enter last name "
+          value={lastName}
+          onChangeText={setLastName}
+        />
       </Text>
 
-      <Text>Last Name:
-      <TextInput
-        placeholder=" Enter last name "
-        value={lastName}
-        onChangeText={setLastName}
-      />
+      <Text style={styles.label}>
+        First Name:
+        <TextInput
+          style={styles.input}
+          placeholder=" Enter first name "
+          value={firstName}
+          onChangeText={setFirstName}
+        />
       </Text>
 
-      <Text >Email:
-      <TextInput
-        placeholder=" Enter email "
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-      />
+      <Text style={styles.label}>
+        Section:
+        <TextInput
+          style={styles.input}
+          placeholder=" Enter Section "
+          value={section}
+          onChangeText={setSection}
+        />
       </Text>
 
-      <View >
-        <Button title="Submit" onPress={handleSubmit} />
-        <Button title="Clear"  onPress={handleClear} />
-        <Button title="Greet"  onPress={handleGreet} />
+      <Text>{message}</Text>
+
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity onPress={handlePresent}>
+          <Text>Present</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={handleAbsent}>
+          <Text>Absent</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
 }
 
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//     padding: 20,
-//     justifyContent: 'center',
-//   },
-//   label: {
-//     fontSize: 16,
-//     marginBottom: 5,
-//   },
-//   input: {
-//     borderWidth: 1,
-//     borderColor: '#ccc',
-//     padding: 10,
-//     marginBottom: 15,
-//     borderRadius: 5,
-//   },
-//   buttonContainer: {
-//     marginTop: 20,
-//     gap: 10,
-//   },
-// });
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#92dae5ff",
+    padding: 20,
+    justifyContent: "center",
+  },
+  label: {
+    fontSize: 30,
+    marginBottom: 5,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 10,
+    marginBottom: 15,
+    borderRadius: 5,
+  },
+  buttonContainer: {
+    backgroundColor: "gray",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    marginTop: 20,
+    width: "40%",
+    gap: 5,
+  },
+});
