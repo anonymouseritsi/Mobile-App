@@ -37,7 +37,7 @@ export default function HomeScreen() {
       }
 
       const result = await response.json();
-      setMessage("Attendance Submitted");
+      setMessage("Attendance Submitted!");
       setLastName(""), setFirstName("");
       setSection("");
     } catch (error) {
@@ -79,45 +79,44 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>
-        Last Name:
-        <TextInput
-          style={styles.input}
-          placeholder=" Enter last name "
-          value={lastName}
-          onChangeText={setLastName}
-        />
-      </Text>
+      <Text style={styles.title}>Class Attendance</Text>
 
-      <Text style={styles.label}>
-        First Name:
-        <TextInput
-          style={styles.input}
-          placeholder=" Enter first name "
-          value={firstName}
-          onChangeText={setFirstName}
-        />
-      </Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter Last Name"
+        value={lastName}
+        onChangeText={setLastName}
+      />
 
-      <Text style={styles.label}>
-        Section:
-        <TextInput
-          style={styles.input}
-          placeholder=" Enter Section "
-          value={section}
-          onChangeText={setSection}
-        />
-      </Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter First Name"
+        value={firstName}
+        onChangeText={setFirstName}
+      />
 
-      <Text>{message}</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter Section"
+        value={section}
+        onChangeText={setSection}
+      />
+
+      <Text style={styles.message}>{message}</Text>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={handlePresent}>
-          <Text>Present</Text>
+        <TouchableOpacity
+          style={[styles.button, styles.presentButton]}
+          onPress={() => handleSubmit("Present")}
+        >
+          <Text style={styles.buttonText}>Present</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={handleAbsent}>
-          <Text>Absent</Text>
+        <TouchableOpacity
+          style={[styles.button, styles.absentButton]}
+          onPress={() => handleSubmit("Absent")}
+        >
+          <Text style={styles.buttonText}>Absent</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -127,27 +126,54 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#92dae5ff",
+    backgroundColor: "#eaf7fa",
     padding: 20,
     justifyContent: "center",
+    alignItems: "center",
   },
-  label: {
-    fontSize: 30,
-    marginBottom: 5,
+  title: {
+    fontSize: 28,
+    fontWeight: "bold",
+    marginBottom: 25,
+    color: "#2c3e50",
   },
   input: {
+    width: "90%",
     borderWidth: 1,
     borderColor: "#ccc",
-    padding: 10,
+    padding: 12,
     marginBottom: 15,
-    borderRadius: 5,
+    borderRadius: 10,
+    backgroundColor: "#fff",
+    fontSize: 16,
+  },
+  message: {
+    fontSize: 16,
+    marginVertical: 10,
+    color: "#2c3e50",
   },
   buttonContainer: {
-    backgroundColor: "gray",
     flexDirection: "row",
-    justifyContent: "space-evenly",
+    justifyContent: "space-around",
+    width: "90%",
     marginTop: 20,
-    width: "40%",
-    gap: 5,
+  },
+  button: {
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: 10,
+    alignItems: "center",
+    marginHorizontal: 5,
+  },
+  presentButton: {
+    backgroundColor: "#27ae60",
+  },
+  absentButton: {
+    backgroundColor: "#e74c3c",
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });
